@@ -1,0 +1,87 @@
+:root {
+    --newProjectDivColor: rgb(244, 248, 252);
+    --newProjectFormColor: white;
+}
+
+.newProjectDiv {
+    position: absolute;
+    top: 20vh;
+    left: 30vw;
+    width: 35vw;
+    height: auto;
+    background-color: var(--newProjectDivColor);
+    padding: 5vh;
+    border-radius: 5%;
+    border: 1px solid lightgray;
+}
+
+.newProjectForm {
+    background-color: var(--newProjectFormColor);
+    padding: 3vh;  
+    border-radius: 5%;
+    border: 1px solid lightgray;
+}
+
+.containDiv {
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.projectName {
+    background-color: var(--newProjectFormColor);
+    height: 2.5vh;
+    width:90%;
+}
+
+.projectDescription {
+    background-color: var(--newProjectFormColor);
+    height: 12vh;
+    width:90%;
+}
+
+.dueDateDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-weight: 400;
+    font-size: large;
+}
+
+.dueDateDiv > label {
+    width:50%;
+    margin-right: 1vw;
+}
+
+.dueDateDiv > input {
+    border: 0px;
+    background-color: var(--newProjectFormColor);
+}
+
+.submitBtn,
+.clearBtn {
+    width:30%;
+    height: 3vh;
+}
+
+.projectViewDiv {
+    background-color: var(--newProjectDivColor);
+    padding: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dueDateViewDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    gap: 1vw;
+}
+
+.addToDoBtn {
+    width: 25%;
+}

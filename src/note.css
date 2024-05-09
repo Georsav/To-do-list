@@ -1,0 +1,68 @@
+:root {
+    --noteBorderColor: rgba(165, 42, 42, 0.426);
+    --noteColor: rgb(252, 254, 177);
+    --newProjectDivColor: rgb(244, 248, 252);
+}
+
+.simpleNoteDiv {
+    position: relative;
+    top: 10vh;
+    left:10vw;
+    background-color: var(--noteColor);
+    border: 1px solid var(--noteBorderColor);
+    width: 25vw;
+    height: 50vh;
+    border-radius: 5%;
+    padding: 2%;
+}
+
+.simpleNoteForm {
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    background-color: var(--noteColor);
+    height: 45vh;
+}
+
+.simpleNoteText {
+    background-color: var(--noteColor);;
+    height: 4vh;
+    border: 0px;
+    border-bottom: 1px solid var(--noteBorderColor);
+    font-size: larger;
+}
+
+.simpleNoteDescription {
+    background-color: var(--noteColor);
+    width: 90%;
+}
+
+.submitBtn,
+.simpleNoteClearBtn {
+    background-color: var(--noteColor);
+    border: 1px solid var(--noteBorderColor);
+    height:3vh;
+    font-size: large;
+    width: fit-content;
+}
+
+
+.submitBtn:hover,
+.simpleNoteClearBtn:hover {
+    font-weight:bold;
+}
+
+.noteViewDiv {
+    background-color: var(--newProjectDivColor);
+    padding: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.noteViewDeleteBtn {
+    width: fit-content;
+    font-size: large;
+    height: 3vh;
+}
+

@@ -1,0 +1,48 @@
+body > div {
+    display: flex;
+}
+
+.sidebar {
+    width: 25%;
+    height: 100vh;
+    background-color: rgb(244, 248, 252);
+    border-right: 1.5px solid lightgray;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15vh;
+}
+
+.sidebar > button {
+    margin-bottom: 3vh;
+    background-color: rgb(244, 248, 252);
+    font-weight: 400;
+    font-size:large;
+    border: 0px;
+    width: 65%;
+    height: 5%;
+    border-radius: 30%;
+}
+
+.sidebar > button:hover {
+    font-weight: 800;
+}
+
+.mainboard
+.myProjects {
+    margin-top: 6vh;
+    border-top: 1.5px solid lightgray;
+}
+
+.myProjects > h1 {
+    font-size: large;
+    font-weight: 300;
+}
+
+.myProjects > ul > li {
+    font-size: large;
+    font-weight: 100;
+}
+.mainboard {
+    width: 75%;
+}
