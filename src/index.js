@@ -4,13 +4,13 @@ import "./project.css";
 import "./todo.css";
 
 import {createNote, createSimpleNotesList} from "./note.js";
-import { createProject, createProjectsLst } from "./project.js";
+import {createProject, createProjectsLst, deleteProject} from "./project.js";
 
 
 const simpleNoteButton = document.getElementById('simpleNoteBtn');
 const newProjectBtn = document.getElementById('newProjectBtn');
-const myProjectsList = document.querySelector(".myProjectsList");
-
+const deleteProjectBtn = document.getElementById('deleteProjectBtn');
+const viewProjectsBtn = document.getElementById('viewProjectsBtn')
 
 simpleNoteButton.addEventListener('click', function() {
     createNote();
@@ -28,3 +28,6 @@ viewNotesBtn.addEventListener('click', function() {
     createSimpleNotesList();
 });
 
+deleteProjectBtn.addEventListener('click', function() {
+    deleteProject();
+});

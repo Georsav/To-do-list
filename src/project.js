@@ -43,9 +43,10 @@ const dueDateInput = document.createElement('input');
 const submitBtn = document.createElement('button');
 const clearBtn = document.createElement('button');
 const myProjectsHeader = document.createElement('h1');
-const myProjectsList = document.createElement('ul');
+const deleteProjectDiv = document.createElement('div');
+const deleteProjectHeader = document.createElement('h1');
+const deleteProjectList = document.createElement('select');
 
-const allInstances = {};
 
 export function createProject() {
     mainboard.innerHTML = "";
@@ -53,6 +54,7 @@ export function createProject() {
     newProjectDiv.appendChild(newProjectForm);
     newProjectForm.appendChild(containDiv);
     containDiv.appendChild(projectName);
+    projectName.setAttribute('name', 'projectName'); //name
     containDiv.appendChild(projectDescription);
     dueDateDiv.classList.add('dueDateDiv');
     containDiv.appendChild(dueDateDiv);
@@ -67,7 +69,6 @@ export function createProject() {
     newProjectForm.classList.add('newProjectForm');
     containDiv.classList.add('containDiv');
     projectName.classList.add('projectName');
-    projectName.setAttribute('name', 'projectName'); //name
     projectName.placeholder = "Enter project name";
     projectDescription.classList.add('projectDescription');
     projectDescription.setAttribute('name', 'projectDescription'); //name
@@ -77,53 +78,60 @@ export function createProject() {
     submitBtn.type = 'submit';
     submitBtn.innerHTML = "Save";
     clearBtn.innerHTML = 'Clear'
+    newProjectForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        let nextProject = new FormData(newProjectForm);
+        /*let newProject = new Project(nextProject.get('projectName'), 
+            nextProject.get('projectDescription'), 
+            nextProject.get('dueDate'));
+        newProject.registerName();
+        console.log(newProject.projectName, newProject.projectDueDate);*/
+        const projName = nextProject.get('projectName');
+        console.log(projName);
+        const projData = JSON.parse(localStorage.getItem('projInfo')) || {} ;
+        projData[projName] = {'projectName': '', 'projectDescription': '', 'projectDueDate': '', 'todos': ''};
+        projData[projName]['projectName'] = nextProject.get('projectName');
+        projData[projName]['projectDescription'] = nextProject.get('projectDescription');
+        projData[projName]['projectDueDate'] = nextProject.get('dueDate');
+        projData[projName]['todos'] = [];
+        localStorage.setItem('projInfo', JSON.stringify(projData));
+        alert('Project Saved');
+        mainboard.innerHTML = '';
+    });
 }
-
-newProjectForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    let nextProject = new FormData(newProjectForm);
-    let newProject = new Project(nextProject.get('projectName'), 
-        nextProject.get('projectDescription'), 
-        nextProject.get('dueDate')
-    );
-    newProject.registerName();
-    console.log(newProject.projectName);
-    allInstances[newProject.projectName] = newProject;
-    //console.log(allInstances);
-    alert('Project Saved');
-    mainboard.innerHTML = '';
-});
-
 
 clearBtn.addEventListener('click', function(event) {
     event.preventDefault();
     mainboard.innerHTML = '';
 });
 
-myProjectsList.addEventListener('click', function(event) { //event delegation
-    if (event.target && event.target.matches("li.lstItem")) {
-        createProjectView(event);
-    }
-});
 
 export function createProjectsLst() {
     myProjects.innerHTML = '';
     myProjects.appendChild(myProjectsHeader);
     myProjectsHeader.classList.add('myProjectsHeader');
     myProjectsHeader.innerHTML = "My Projects";
+    const myProjectsList = document.createElement('ul');
     myProjects.appendChild(myProjectsList);
     myProjectsList.classList.add('myProjectList');
-    myProjectsList.innerHTML = '';
-    for (let value of Project.existingNames) {
+    const projData = JSON.parse(localStorage.getItem('projInfo')) || {};
+    const arr = Object.keys(projData);
+    for (let i = 0; i < arr.length; i++ ) {
         const lstItem = document.createElement('li');
         myProjectsList.appendChild(lstItem);
-        lstItem.innerHTML = value;    
+        lstItem.innerHTML = arr[i];    
         lstItem.classList.add('lstItem');
     }
+    myProjectsList.addEventListener('click', function(event) { //event delegation
+        if (event.target && event.target.matches("li.lstItem")) {
+            createProjectView(event);
+        }
+    });
 }
 
 function createProjectView(event) {
     mainboard.innerHTML = '';
+    const projData = JSON.parse(localStorage.getItem('projInfo')) || {};
     const projectViewDiv = document.createElement('div');
     projectViewDiv.classList.add('projectViewDiv');
     mainboard.appendChild(projectViewDiv);
@@ -134,7 +142,8 @@ function createProjectView(event) {
     const projectParagr = document.createElement('p');
     projectParagr.classList.add('projectParagr');
     projectViewDiv.appendChild(projectParagr);
-    projectParagr.innerText = allInstances[event.target.innerHTML].projectDescription;
+    console.log(projData[event.target.innerHTML]);
+    projectParagr.innerText = projData[event.target.innerHTML].projectDescription;
     const dueDateViewDiv = document.createElement('div');
     dueDateViewDiv.classList.add('dueDateViewDiv');
     projectViewDiv.appendChild(dueDateViewDiv);
@@ -144,17 +153,61 @@ function createProjectView(event) {
     const dueDateViewParagr = document.createElement('p');
     dueDateViewParagr.classList.add('dueDateViewParagr');
     dueDateViewDiv.appendChild(dueDateViewParagr);
-    dueDateViewParagr.innerText = allInstances[event.target.innerHTML].dueDate;
+    dueDateViewParagr.innerText = projData[event.target.innerHTML].projectDueDate;
     const addToDoBtn = document.createElement('button');
     addToDoBtn.classList.add('addToDoBtn');
     projectViewDiv.appendChild(addToDoBtn);
     addToDoBtn.innerHTML = 'Add new ToDo';
+    const updateProjectBtn = document.createElement('button');
+    updateProjectBtn.classList.add('updateProjectBtn');
+    projectViewDiv.appendChild(updateProjectBtn);
+    updateProjectBtn.innerHTML = 'Update Project';
+    if (projData[event.target.innerHTML].todos.length > 0) {
+        createTodosViewDiv(event.target.innerHTML);
+    } 
     addToDoBtn.addEventListener('click', function() {
         toDoFormDiv.innerHTML = '';
         createNewToDoForm(event.target.innerHTML);
     });
+    updateProjectBtn.addEventListener('click', function() {
+        mainboard.innerHTML = '';
+        updateProject(event.target.innerHTML);
+    });
 }
- 
+
+export function deleteProject() {
+    mainboard.innerHTML = "";
+    mainboard.appendChild(deleteProjectDiv);
+    deleteProjectDiv.classList.add('deleteProjectDiv');
+    deleteProjectHeader.classList.add('deleteProjectHeader');
+    deleteProjectDiv.appendChild(deleteProjectHeader);
+    deleteProjectHeader.innerHTML = 'Choose project to delete:';
+    deleteProjectDiv.appendChild(deleteProjectList);
+    deleteProjectList.classList.add('deleteProjectList');
+    while (deleteProjectList.length > 0) {
+        deleteProjectList.remove(deleteProjectList.length - 1);
+    }
+    const projData = JSON.parse(localStorage.getItem('projInfo')) || {};
+    const arr = Object.keys(projData);
+    arr.unshift('Select Project');
+    for (let i = 0; i < arr.length; i++) {
+        const deleteProjectSelection = document.createElement('option');
+        deleteProjectList.appendChild(deleteProjectSelection);
+        deleteProjectSelection.innerHTML = arr[i];
+        deleteProjectSelection.value = arr[i];
+    }
+    deleteProjectList.addEventListener('change', function(event) {
+        const projData = JSON.parse(localStorage.getItem('projInfo')) || {};
+        delete projData[event.target.value];
+        localStorage.setItem('projInfo', JSON.stringify(projData));
+    });
+}
+
+function updateProject(rootPr) {
+    //use the same layout as create project
+    //use data from localStorage
+}
+
 const toDoFormDiv = document.createElement('div');
 
 function createNewToDoForm(rootPr) {
@@ -245,10 +298,33 @@ function createNewToDoForm(rootPr) {
             notes: nextToDo.get('notes'),
             priority: nextToDo.get('priority')
         }
-        allInstances[rootPr].todos.push(newToDo);
-        console.log(allInstances);
+        const projData = JSON.parse(localStorage.getItem('projInfo')) || {};
+        projData[rootPr].todos.push(newToDo);
+        localStorage.setItem('projInfo', JSON.stringify(projData));
+        console.log(projData);
         toDoFormDiv.remove();
     });
+}
+
+const todosViewDiv = document.createElement('div');
+function createTodosViewDiv(rootPr) {
+    todosViewDiv.innerHTML = '';
+    mainboard.appendChild(todosViewDiv);
+    todosViewDiv.classList.add('todosViewDiv');
+    const todosViewHeader = document.createElement('h2');
+    todosViewHeader.classList.add('todosViewHeader');
+    todosViewHeader.innerHTML = "Saved \"todos\" for this project:";
+    todosViewDiv.appendChild(todosViewHeader);
+    const projData = JSON.parse(localStorage.getItem('projInfo')) || {};
+    console.log(projData[rootPr].todos.length);
+    const todosViewList = document.createElement('ul');
+    todosViewDiv.appendChild(todosViewList);
+    for (let i = 0; i < projData[rootPr].todos.length; i++) {
+        const lstTodoItem = document.createElement('li');
+        todosViewList.appendChild(lstTodoItem);
+        lstTodoItem.classList.add('lstTodoItem');
+        lstTodoItem.innerHTML = `${projData[rootPr].todos[i].title}, due date: ${projData[rootPr].todos[i].dueDate}`;
+    }
 }
 
 
